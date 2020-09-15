@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"
+      integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q=="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.min.js"
+      integrity="sha512-8qx1DL/2Wsrrij2TWX5UzvEaYOFVndR7BogdpOyF4ocMfnfkw28qt8ULkXD9Tef0bLvh3TpnSAljDC7uyniEuQ=="
+      crossorigin="anonymous"
+    ></script>
+    <title>Html/Css/Js Editor</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      #editor {
+        height: 100%;
+        width: 50%;
+        display: inline-block;
+      }
+
+      #container {
+        height: 100%;
+        width: auto;
+        white-space: nowrap;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #iframe {
+        height: 100%;
+        display: inline-block;
+        width: 50%;
+      }
+
+      /* disable tag matching */
+      .ace_editor .ace_marker-layer .ace_bracket {
+        display: none;
+      }
+    </style>
+  </head>
+  <body onload="ready()">
+    <div id="container">
+      <div id="editor"></div>
+
+      <iframe id="iframe" frameborder="0"> </iframe>
+      <script>
+        function update() {
+          var idoc = document.getElementById("iframe").contentWindow.document;
+
+          idoc.open();
+          idoc.write(editor.getValue());
+          idoc.close();
+        }
+
+        function setupEditor() {
+          require("ace/ext/language_tools");
+          window.editor = ace.edit("editor");
+          editor.setTheme("ace/theme/tomorrow_night");
+          editor.getSession().setMode("ace/mode/html");
+          editor.setValue(
+            `<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+</body>
+
+</html>`,
+            1
+          ); //1 = moves cursor to end
+
+          editor.getSession().on("change", function () {
+            update();
+          });
+
+          editor.focus();
+
+          editor.setOptions({
+            fontSize: "16pt",
+            showLineNumbers: true,
+            showGutter: true,
+            vScrollBarAlwaysVisible: true,
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: true,
+            showLineNumbers: true,
+          });
+
+          editor.setShowPrintMargin(false);
+          editor.setBehavioursEnabled(false);
+        }
+
+        setupEditor();
+        update();
+      </script>
+    </div>
+  </body>
+</html>
